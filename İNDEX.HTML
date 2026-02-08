@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LEZZET-İ ALA Sipariş</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC_JxCdJ8Zjzkjg-Y8ntiiaBukhC2EPbPY",
+  authDomain: "lezzetiala-25576.firebaseapp.com",
+  projectId: "lezzetiala-25576",
+  storageBucket: "lezzetiala-25576.firebasestorage.app",
+  messagingSenderId: "551557573651",
+  appId: "1:551557573651:web:d886b7ecaa11458655e3e6"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
+<style>
+body{background:#000;color:white;font-family:Arial;padding:10px}
+h2{text-align:center;color:orange}
+button{background:orange;color:black;padding:12px;border:none;border-radius:12px;font-weight:bold;width:100%}
+.card{background:#111;padding:12px;margin:10px 0;border-radius:15px;box-shadow:0 0 10px #000}
+img{width:100%;border-radius:12px}
+.card:hover{transform:scale(1.02);transition:.2s}
+select,input,textarea{width:100%;padding:10px;border-radius:8px;margin-bottom:8px}
+.sepetItem{display:flex;justify-content:space-between;background:#222;padding:8px;border-radius:8px;margin:5px 0}
+</style>
+</head>
+<body>
+
+<h2>🍽️ LEZZET-İ ALA MENÜ</h2>
+<div id="menu"></div>
+
+<h4>💳 Ödeme Yöntemi</h4>
+<select id="odeme" style="width:100%;padding:10px;border-radius:8px;">
+  <option value="Kapıda Nakit">Kapıda Nakit</option>
+  <option value="Kapıda Kredi Kartı">Kapıda Kredi Kartı</option>
+  <option value="Kapıda QR">Kapıda QR</option>
+</select>
+<br><br>
+
+<h3>🛒 Sepet</h3>
+<div id="sepet"></div>
+<h3>Toplam: <span id="toplam">0</span> TL</h3>
+
+<h4>👤 Sipariş Bilgileri</h4>
+<input id="isim" placeholder="Ad Soyad"><br><br>
+<input id="tel" placeholder="Telefon"><br><br>
+<textarea id="adres" placeholder="Adres"></textarea><br><br>
+
+<button onclick="whatsappSiparis()">📲 WhatsApp Sipariş Ver</button>
+
+<script>
+
+function adetArttir(ad){
+  sepet[ad].adet++;
+  sepetGoster();
+}
+
+function adetAzalt(ad){
+  sepet[ad].adet--;
+  if(sepet[ad].adet <= 0){
+    delete sepet[ad];
+  }
+  sepetGoster();
+}
+
+let sepet = {};
+
+let tumUrunler=[];
+
+db.collection("urunler").onSnapshot(snap=>{
+  menu.innerHTML="";
+  tumUrunler=[];
+  let kategoriler=new Set(["Hepsi"]);
+
+  snap.forEach(doc=>{
+    let u=doc.data();
+    u.id=doc.id;
+    tumUrunler.push(u);
+    kategoriler.add(u.kategori||"Diğer");
+  });
+
+  kategoriFiltre.innerHTML="";
+  kategoriler.forEach(k=>{
+    kategoriFiltre.innerHTML+=`<option>${k}</option>`;
+  });
+
+  urunleriGoster("Hepsi");
+});
+
+function urunleriGoster(kat){
+  menu.innerHTML="";
+  tumUrunler.forEach(u=>{
+    if(kat=="Hepsi" || u.kategori==kat){
+      menu.innerHTML+=`
+      <div class="card">
+        <img src="${u.resim}">
+        <h3>${u.ad}</h3>
+        <small>${u.kategori||"Diğer"}</small><br>
+        <b>${u.fiyat} TL</b>
+        <button onclick='sepeteEkle("${u.ad}",${u.fiyat})'>Sepete Ekle</button>
+      </div>`;
+    }
+  });
+}
+
+function kategoriFiltrele(){
+  urunleriGoster(kategoriFiltre.value);
+}
+
+function sepeteEkle(ad, fiyat){
+  if(sepet[ad]){
+    sepet[ad].adet++;
+  } else {
+    sepet[ad] = {fiyat:fiyat, adet:1};
+  }
+  sepetGoster();
+}
+
+function sepetGoster(){
+  let html="";
+  let toplam=0;
+
+  for(let ad in sepet){
+    let item = sepet[ad];
+    let araToplam = item.fiyat * item.adet;
+    toplam += araToplam;
+
+    html += `
+    <div class="sepetItem">
+      <span>${ad}</span>
+      <span>
+        <button onclick="adetAzalt('${ad}')">-</button>
+        ${item.adet}
+        <button onclick="adetArttir('${ad}')">+</button>
+        (${araToplam} TL)
+      </span>
+    </div>`;
+  }
+
+  document.getElementById("sepet").innerHTML = html;
+  document.getElementById("toplam").innerText = toplam;
+}
+
+function whatsappSiparis(){
+  let ad=isim.value, tel=tel.value, adr=adres.value;
+  let odeme = document.getElementById("odeme").value;
+  
+  if(!ad||!tel||!adr){ alert("Ad, Telefon ve Adres zorunlu!"); return;}
+  if(sepet.length==0){ alert("Sepet boş!"); return;}
+
+  let tarih = new Date().toLocaleString("tr-TR");
+
+  let msg=`🍽️ LEZZET-İ ALA SİPARİŞ
+Sipariş No: ${siparisNo}
+📅 Tarih: ${tarih}
+
+👤 Ad: ${ad}
+📞 Tel: ${tel}
+📍 Adres: ${adr}
+
+💳 Ödeme: ${odeme}
+
+🛒 Ürünler:
+`;
+
+for(let ad in sepet){
+  let item = sepet[ad];
+  msg += `- ${ad} x${item.adet} = ${item.fiyat * item.adet} TL\n`;
+}
+
+</script>
+
+</body>
+</html>
