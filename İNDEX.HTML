@@ -1,180 +1,266 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>LEZZET-İ ALA Sipariş</title>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC_JxCdJ8Zjzkjg-Y8ntiiaBukhC2EPbPY",
-  authDomain: "lezzetiala-25576.firebaseapp.com",
-  projectId: "lezzetiala-25576",
-  storageBucket: "lezzetiala-25576.firebasestorage.app",
-  messagingSenderId: "551557573651",
-  appId: "1:551557573651:web:d886b7ecaa11458655e3e6"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lezzet-i Ala Sipariş</title>
 
 <style>
-body{background:#000;color:white;font-family:Arial;padding:10px}
-h2{text-align:center;color:orange}
-button{background:orange;color:black;padding:12px;border:none;border-radius:12px;font-weight:bold;width:100%}
-.card{background:#111;padding:12px;margin:10px 0;border-radius:15px;box-shadow:0 0 10px #000}
-img{width:100%;border-radius:12px}
-.card:hover{transform:scale(1.02);transition:.2s}
-select,input,textarea{width:100%;padding:10px;border-radius:8px;margin-bottom:8px}
-.sepetItem{display:flex;justify-content:space-between;background:#222;padding:8px;border-radius:8px;margin:5px 0}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: black;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 15px;
+  border-bottom: 2px solid orange;
+}
+
+header img {
+  width: 80px;
+  display: block;
+  margin: auto;
+}
+
+header h1 {
+  color: orange;
+  margin: 5px 0;
+}
+
+#categories {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.cat-btn {
+  background: #222;
+  color: white;
+  border: 1px solid orange;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cat-btn:hover, .cat-btn.active {
+  background: orange;
+  color: black;
+}
+
+#products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
+
+.product {
+  background: #111;
+  border: 1px solid #333;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.product:hover {
+  border-color: orange;
+  transform: scale(1.05);
+}
+
+.product h3 {
+  color: orange;
+  margin: 5px 0;
+}
+
+#cart {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #111;
+  border-top: 2px solid orange;
+  padding: 10px;
+}
+
+#cart-items {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#orderBtn {
+  background: orange;
+  color: black;
+  width: 100%;
+  font-size: 18px;
+}
+
+#clearBtn {
+  background: red;
+  color: white;
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* Popup */
+#popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#popup div {
+  background: #111;
+  padding: 20px;
+  border: 2px solid orange;
+  border-radius: 10px;
+  width: 300px;
+}
+
+#popup input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+}
 </style>
 </head>
+
 <body>
 
-<h2>🍽️ LEZZET-İ ALA MENÜ</h2>
-<div id="menu"></div>
+<header>
+  <!-- LOGO -->
+  <img src="logo.png" alt="Logo">
+  <!-- RESTORAN ADI -->
+  <h1>Lezzet-i Ala Köfte & Kokoreç</h1>
+</header>
 
-<h4>💳 Ödeme Yöntemi</h4>
-<select id="odeme" style="width:100%;padding:10px;border-radius:8px;">
-  <option value="Kapıda Nakit">Kapıda Nakit</option>
-  <option value="Kapıda Kredi Kartı">Kapıda Kredi Kartı</option>
-  <option value="Kapıda QR">Kapıda QR</option>
-</select>
-<br><br>
+<div id="categories"></div>
+<div id="products"></div>
 
-<h3>🛒 Sepet</h3>
-<div id="sepet"></div>
-<h3>Toplam: <span id="toplam">0</span> TL</h3>
+<!-- SEPET -->
+<div id="cart">
+  <div id="cart-items"></div>
+  <h3>Toplam: <span id="total">0</span> TL</h3>
+  <button id="orderBtn">📲 Sipariş Ver</button>
+  <button id="clearBtn">🧹 Sepeti Temizle</button>
+</div>
 
-<h4>👤 Sipariş Bilgileri</h4>
-<input id="isim" placeholder="Ad Soyad"><br><br>
-<input id="tel" placeholder="Telefon"><br><br>
-<textarea id="adres" placeholder="Adres"></textarea><br><br>
-
-<button onclick="whatsappSiparis()">📲 WhatsApp Sipariş Ver</button>
+<!-- POPUP -->
+<div id="popup">
+  <div>
+    <h3>Bilgilerinizi Girin</h3>
+    <input id="name" placeholder="Ad Soyad">
+    <input id="phone" placeholder="Telefon">
+    <input id="address" placeholder="Adres">
+    <button onclick="sendWhatsApp()">Gönder</button>
+  </div>
+</div>
 
 <script>
+// ÜRÜNLER
+let products = [
+ {name:"Kokoreç Yarım", price:150, category:"Kokoreç"},
+ {name:"Kokoreç Tam", price:280, category:"Kokoreç"},
+ {name:"Köfte Ekmek", price:120, category:"Köfte"},
+ {name:"Köfte Menü", price:220, category:"Köfte"},
+ {name:"Karışık Izgara", price:480, category:"Izgara"},
+];
 
-function adetArttir(ad){
-  sepet[ad].adet++;
-  sepetGoster();
-}
+let cart = {};
+let categories = [...new Set(products.map(p=>p.category))];
 
-function adetAzalt(ad){
-  sepet[ad].adet--;
-  if(sepet[ad].adet <= 0){
-    delete sepet[ad];
-  }
-  sepetGoster();
-}
-
-let sepet = {};
-
-let tumUrunler=[];
-
-db.collection("urunler").onSnapshot(snap=>{
-  menu.innerHTML="";
-  tumUrunler=[];
-  let kategoriler=new Set(["Hepsi"]);
-
-  snap.forEach(doc=>{
-    let u=doc.data();
-    u.id=doc.id;
-    tumUrunler.push(u);
-    kategoriler.add(u.kategori||"Diğer");
-  });
-
-  kategoriFiltre.innerHTML="";
-  kategoriler.forEach(k=>{
-    kategoriFiltre.innerHTML+=`<option>${k}</option>`;
-  });
-
-  urunleriGoster("Hepsi");
+// KATEGORİ BUTONLARI
+let catDiv = document.getElementById("categories");
+categories.forEach(c=>{
+ let btn=document.createElement("button");
+ btn.className="cat-btn";
+ btn.innerText=c;
+ btn.onclick=()=>filterCategory(c,btn);
+ catDiv.appendChild(btn);
 });
 
-function urunleriGoster(kat){
-  menu.innerHTML="";
-  tumUrunler.forEach(u=>{
-    if(kat=="Hepsi" || u.kategori==kat){
-      menu.innerHTML+=`
-      <div class="card">
-        <img src="${u.resim}">
-        <h3>${u.ad}</h3>
-        <small>${u.kategori||"Diğer"}</small><br>
-        <b>${u.fiyat} TL</b>
-        <button onclick='sepeteEkle("${u.ad}",${u.fiyat})'>Sepete Ekle</button>
-      </div>`;
-    }
-  });
+// ÜRÜNLERİ YÜKLE
+function loadProducts(list){
+ document.getElementById("products").innerHTML="";
+ list.forEach(p=>{
+  let d=document.createElement("div");
+  d.className="product";
+  d.innerHTML=`<h3>${p.name}</h3><p>${p.price} TL</p>`;
+  d.onclick=()=>addToCart(p);
+  document.getElementById("products").appendChild(d);
+ });
+}
+loadProducts(products);
+
+// KATEGORİ FİLTRE
+function filterCategory(cat,btn){
+ document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ loadProducts(products.filter(p=>p.category==cat));
 }
 
-function kategoriFiltrele(){
-  urunleriGoster(kategoriFiltre.value);
+// SEPETE EKLE
+function addToCart(p){
+ if(!cart[p.name]) cart[p.name]={...p,qty:0};
+ cart[p.name].qty++;
+ updateCart();
 }
 
-function sepeteEkle(ad, fiyat){
-  if(sepet[ad]){
-    sepet[ad].adet++;
-  } else {
-    sepet[ad] = {fiyat:fiyat, adet:1};
-  }
-  sepetGoster();
+// SEPET GÜNCELLE
+function updateCart(){
+ let div=document.getElementById("cart-items");
+ div.innerHTML="";
+ let total=0;
+ for(let k in cart){
+  let item=cart[k];
+  total+=item.price*item.qty;
+  div.innerHTML+=`${item.name} x${item.qty} = ${item.price*item.qty} TL<br>`;
+ }
+ document.getElementById("total").innerText=total;
 }
 
-function sepetGoster(){
-  let html="";
-  let toplam=0;
+// SEPET TEMİZLE
+document.getElementById("clearBtn").onclick=()=>{
+ cart={};
+ updateCart();
+};
 
-  for(let ad in sepet){
-    let item = sepet[ad];
-    let araToplam = item.fiyat * item.adet;
-    toplam += araToplam;
+// POPUP AÇ
+document.getElementById("orderBtn").onclick=()=>{
+ document.getElementById("popup").style.display="flex";
+};
 
-    html += `
-    <div class="sepetItem">
-      <span>${ad}</span>
-      <span>
-        <button onclick="adetAzalt('${ad}')">-</button>
-        ${item.adet}
-        <button onclick="adetArttir('${ad}')">+</button>
-        (${araToplam} TL)
-      </span>
-    </div>`;
-  }
+// WHATSAPP GÖNDER
+function sendWhatsApp(){
+ let name=document.getElementById("name").value;
+ let phone=document.getElementById("phone").value;
+ let address=document.getElementById("address").value;
 
-  document.getElementById("sepet").innerHTML = html;
-  document.getElementById("toplam").innerText = toplam;
+ let msg=`Sipariş:\\nAd: ${name}\\nTel: ${phone}\\nAdres: ${address}\\n\\n`;
+ for(let k in cart){
+  let i=cart[k];
+  msg+=`${i.name} x${i.qty} = ${i.price*i.qty} TL\\n`;
+ }
+ msg+=`Toplam: ${document.getElementById("total").innerText} TL`;
+
+ let url=`https://wa.me/905337750685?text=${encodeURIComponent(msg)}`;
+ window.open(url,"_blank");
 }
-
-function whatsappSiparis(){
-  let ad=isim.value, tel=tel.value, adr=adres.value;
-  let odeme = document.getElementById("odeme").value;
-  
-  if(!ad||!tel||!adr){ alert("Ad, Telefon ve Adres zorunlu!"); return;}
-  if(sepet.length==0){ alert("Sepet boş!"); return;}
-
-  let tarih = new Date().toLocaleString("tr-TR");
-
-  let msg=`🍽️ LEZZET-İ ALA SİPARİŞ
-Sipariş No: ${siparisNo}
-📅 Tarih: ${tarih}
-
-👤 Ad: ${ad}
-📞 Tel: ${tel}
-📍 Adres: ${adr}
-
-💳 Ödeme: ${odeme}
-
-🛒 Ürünler:
-`;
-
-for(let ad in sepet){
-  let item = sepet[ad];
-  msg += `- ${ad} x${item.adet} = ${item.fiyat * item.adet} TL\n`;
-}
-
 </script>
 
 </body>
