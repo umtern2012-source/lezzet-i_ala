@@ -1,265 +1,249 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lezzet-i Ala Sipariş</title>
+<title>Lezzet-i Ala Köfte & Kokoreç</title>
 
 <style>
 body {
-  margin: 0;
+  margin:0;
   font-family: Arial, sans-serif;
-  background: black;
-  color: white;
+  background:#000;
+  color:white;
 }
 
-header {
-  text-align: center;
-  padding: 15px;
-  border-bottom: 2px solid orange;
+/* LOGO */
+.logo-box {
+  text-align:center;
+  padding:20px;
+}
+.logo-box img {
+  width:180px;
+}
+.logo-text {
+  font-size:26px;
+  font-weight:bold;
+  color:orange;
 }
 
-header img {
-  width: 80px;
-  display: block;
-  margin: auto;
+/* KATEGORİ */
+.category {
+  font-size:22px;
+  font-weight:bold;
+  color:orange;
+  margin:25px 10px 10px;
+  border-bottom:2px solid orange;
+  padding-bottom:5px;
 }
 
-header h1 {
-  color: orange;
-  margin: 5px 0;
-}
-
-#categories {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  overflow-x: auto;
-}
-
-.cat-btn {
-  background: #222;
-  color: white;
-  border: 1px solid orange;
-  padding: 8px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.cat-btn:hover, .cat-btn.active {
-  background: orange;
-  color: black;
-}
-
-#products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
-  padding: 15px;
-}
-
+/* ÜRÜN KARTI */
 .product {
-  background: #111;
-  border: 1px solid #333;
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.2s;
+  background:#111;
+  padding:12px;
+  margin:8px;
+  border-radius:10px;
+  border:1px solid orange;
+  cursor:pointer;
+  transition:0.2s;
 }
-
 .product:hover {
-  border-color: orange;
-  transform: scale(1.05);
+  transform:scale(1.02);
+  background:#222;
+}
+.product-name {
+  font-size:18px;
+  font-weight:bold;
+}
+.product-price {
+  color:gold;
+  font-size:16px;
 }
 
-.product h3 {
-  color: orange;
-  margin: 5px 0;
-}
-
+/* SEPET */
 #cart {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #111;
-  border-top: 2px solid orange;
-  padding: 10px;
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#111;
+  border-top:2px solid orange;
+  padding:10px;
 }
-
 #cart-items {
-  max-height: 120px;
-  overflow-y: auto;
+  max-height:120px;
+  overflow:auto;
+  font-size:14px;
+}
+.cart-btn {
+  background:orange;
+  color:black;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  width:100%;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:5px;
+  cursor:pointer;
 }
 
-button {
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
+/* POPUP */
+.popup {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
-
-#orderBtn {
-  background: orange;
-  color: black;
-  width: 100%;
-  font-size: 18px;
+.popup-box {
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  width:90%;
+  max-width:400px;
+  border:2px solid orange;
 }
-
-#clearBtn {
-  background: red;
-  color: white;
-  width: 100%;
-  margin-top: 5px;
-}
-
-/* Popup */
-#popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-#popup div {
-  background: #111;
-  padding: 20px;
-  border: 2px solid orange;
-  border-radius: 10px;
-  width: 300px;
-}
-
-#popup input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
+.popup-box input {
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:5px;
+  border:none;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <!-- LOGO -->
-  <img src="logo.png" alt="Logo">
-  <!-- RESTORAN ADI -->
-  <h1>Lezzet-i Ala Köfte & Kokoreç</h1>
-</header>
+<!-- LOGO -->
+<div class="logo-box">
+  <img src="logo.png">
+  <div class="logo-text">LEZZET-İ ALA KÖFTE & KOKOREÇ</div>
+</div>
 
-<div id="categories"></div>
-<div id="products"></div>
+<div id="menu"></div>
 
 <!-- SEPET -->
 <div id="cart">
   <div id="cart-items"></div>
-  <h3>Toplam: <span id="total">0</span> TL</h3>
-  <button id="orderBtn">📲 Sipariş Ver</button>
-  <button id="clearBtn">🧹 Sepeti Temizle</button>
+  <div id="total">Toplam: 0 TL</div>
+  <button class="cart-btn" onclick="openPopup()">Sipariş Ver</button>
+  <button class="cart-btn" onclick="clearCart()">Sepeti Temizle</button>
 </div>
 
 <!-- POPUP -->
-<div id="popup">
-  <div>
+<div class="popup" id="popup">
+  <div class="popup-box">
     <h3>Bilgilerinizi Girin</h3>
-    <input id="name" placeholder="Ad Soyad">
+    <input id="name" placeholder="İsim">
     <input id="phone" placeholder="Telefon">
     <input id="address" placeholder="Adres">
-    <button onclick="sendWhatsApp()">Gönder</button>
+    <button class="cart-btn" onclick="sendWhatsApp()">WhatsApp Sipariş Gönder</button>
   </div>
 </div>
 
 <script>
-// ÜRÜNLER
-let products = [
- {name:"Kokoreç Yarım", price:150, category:"Kokoreç"},
- {name:"Kokoreç Tam", price:280, category:"Kokoreç"},
- {name:"Köfte Ekmek", price:120, category:"Köfte"},
- {name:"Köfte Menü", price:220, category:"Köfte"},
- {name:"Karışık Izgara", price:480, category:"Izgara"},
-];
+// MENÜ
+const menuData = {
+"Ana Yemek":[
+["Kokoreç",350],["Köfte",300],["Adana",300],["Kanat",275],["Tavuk Şiş",175],
+["Sucuk",250],["Karışık Kebap",800]
+],
+"İçecek":[
+["Şişe Kola",60],["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",40],
+["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],
+["Fanta 1L",100],["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],
+["Niğde Gazozu",40],["Su",20]
+],
+"Yan Ürünler":[
+["Jumbo Midye",20],["Normal Midye",15],["Atom Kokoreç",450],
+["Şırdan",350],["Mumbar",400],["Dürüm Kokoreç",360]
+],
+"Kiloluk Ürünler":[
+["Kilo Kanat",800],["Yarım Kilo Kanat",400],["Kilo Köfte",1750],
+["Yarım Kilo Köfte",875],["Kilo Tavuk Şiş",500],["Yarım Kilo Tavuk Şiş",250]
+],
+"Çiğ Ürünler":[
+["Soslu Yaprak Kanat",400],["Yaprak Kanat",375],["Kasap Köfte Kg",1000],
+["10 Şiş Adana",1250],["Atom Kokoreç 1 Adet",700],
+["Kokoreç 1Kg",900],["Tüm Şiş Kokoreç Kampanya",3600],
+["Tavuk Şiş",250]
+],
+"Tatlı":[
+["Fırın Sütlaç",80]
+]
+};
 
-let cart = {};
-let categories = [...new Set(products.map(p=>p.category))];
+let cart=[];
 
-// KATEGORİ BUTONLARI
-let catDiv = document.getElementById("categories");
-categories.forEach(c=>{
- let btn=document.createElement("button");
- btn.className="cat-btn";
- btn.innerText=c;
- btn.onclick=()=>filterCategory(c,btn);
- catDiv.appendChild(btn);
-});
-
-// ÜRÜNLERİ YÜKLE
-function loadProducts(list){
- document.getElementById("products").innerHTML="";
- list.forEach(p=>{
-  let d=document.createElement("div");
-  d.className="product";
-  d.innerHTML=`<h3>${p.name}</h3><p>${p.price} TL</p>`;
-  d.onclick=()=>addToCart(p);
-  document.getElementById("products").appendChild(d);
- });
-}
-loadProducts(products);
-
-// KATEGORİ FİLTRE
-function filterCategory(cat,btn){
- document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active"));
- btn.classList.add("active");
- loadProducts(products.filter(p=>p.category==cat));
+// MENÜ YÜKLE
+const menuDiv=document.getElementById("menu");
+for(let cat in menuData){
+  menuDiv.innerHTML+=`<div class="category">${cat}</div>`;
+  menuData[cat].forEach(item=>{
+    menuDiv.innerHTML+=`
+      <div class="product" onclick="addToCart('${item[0]}',${item[1]})">
+        <div class="product-name">${item[0]}</div>
+        <div class="product-price">${item[1]} TL</div>
+      </div>`;
+  });
 }
 
 // SEPETE EKLE
-function addToCart(p){
- if(!cart[p.name]) cart[p.name]={...p,qty:0};
- cart[p.name].qty++;
- updateCart();
+function addToCart(name,price){
+  cart.push({name,price});
+  updateCart();
 }
 
 // SEPET GÜNCELLE
 function updateCart(){
- let div=document.getElementById("cart-items");
- div.innerHTML="";
- let total=0;
- for(let k in cart){
-  let item=cart[k];
-  total+=item.price*item.qty;
-  div.innerHTML+=`${item.name} x${item.qty} = ${item.price*item.qty} TL<br>`;
- }
- document.getElementById("total").innerText=total;
+  let html="";
+  let total=0;
+  cart.forEach(i=>{
+    html+=`${i.name} - ${i.price} TL<br>`;
+    total+=i.price;
+  });
+  document.getElementById("cart-items").innerHTML=html;
+  document.getElementById("total").innerText="Toplam: "+total+" TL";
 }
 
 // SEPET TEMİZLE
-document.getElementById("clearBtn").onclick=()=>{
- cart={};
- updateCart();
-};
+function clearCart(){
+  cart=[];
+  updateCart();
+}
 
 // POPUP AÇ
-document.getElementById("orderBtn").onclick=()=>{
- document.getElementById("popup").style.display="flex";
-};
+function openPopup(){
+  if(cart.length==0){alert("Sepet boş!"); return;}
+  document.getElementById("popup").style.display="flex";
+}
 
 // WHATSAPP GÖNDER
 function sendWhatsApp(){
- let name=document.getElementById("name").value;
- let phone=document.getElementById("phone").value;
- let address=document.getElementById("address").value;
+  let name=document.getElementById("name").value;
+  let phone=document.getElementById("phone").value;
+  let address=document.getElementById("address").value;
 
- let msg=`Sipariş:\\nAd: ${name}\\nTel: ${phone}\\nAdres: ${address}\\n\\n`;
- for(let k in cart){
-  let i=cart[k];
-  msg+=`${i.name} x${i.qty} = ${i.price*i.qty} TL\\n`;
- }
- msg+=`Toplam: ${document.getElementById("total").innerText} TL`;
+  let msg="Yeni Sipariş%0A";
+  msg+="İsim: "+name+"%0A";
+  msg+="Telefon: "+phone+"%0A";
+  msg+="Adres: "+address+"%0A%0A";
+  msg+="Sipariş:%0A";
 
- let url=`https://wa.me/905337750685?text=${encodeURIComponent(msg)}`;
- window.open(url,"_blank");
+  let total=0;
+  cart.forEach(i=>{
+    msg+=i.name+" - "+i.price+" TL%0A";
+    total+=i.price;
+  });
+  msg+="%0AToplam: "+total+" TL";
+
+  window.open("https://wa.me/905337750685?text="+msg);
 }
 </script>
 
