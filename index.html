@@ -194,16 +194,30 @@ body {
   </div>
 </div>
   
-// 0-100 SOL
-for(let i=0;i<=100;i++){
-  document.getElementById("leftTime").innerHTML +=
-  `<div onclick="selectedHour='${i}'" style="padding:5px; cursor:pointer;">${i}</div>`;
-}
+function openPopup(){
+  if(Object.keys(cart).length==0){
+    alert("Sepet boş!");
+    return;
+  }
 
-// 0-60 SAĞ
-for(let i=0;i<=60;i++){
-  document.getElementById("rightTime").innerHTML +=
-  `<div onclick="selectedMinute='${i}'" style="padding:5px; cursor:pointer;">${i}</div>`;
+  document.getElementById("popup").style.display="flex";
+
+  // Saatleri sadece popup açılınca yükle
+  if(document.getElementById("leftTime").innerHTML==""){
+
+    // 0-100 SOL
+    for(let i=0;i<=100;i++){
+      document.getElementById("leftTime").innerHTML +=
+      `<div onclick="selectHour(${i})" style="padding:5px; cursor:pointer;">${i}</div>`;
+    }
+
+    // 0-60 SAĞ
+    for(let i=0;i<=60;i++){
+      document.getElementById("rightTime").innerHTML +=
+      `<div onclick="selectMinute(${i})" style="padding:5px; cursor:pointer;">${i}</div>`;
+    }
+
+  }
 }
 
 // Ödeme seç
@@ -353,10 +367,20 @@ if(selectedPayment==""){
   msg+="%0AToplam: "+total+" TL";
   window.open("https://wa.me/905337750685?text="+msg);
 }
+  function selectHour(val){
+  selectedHour = val;
+  alert("Saat seçildi: " + val);
+}
+
+function selectMinute(val){
+  selectedMinute = val;
+  alert("Dakika seçildi: " + val);
+}
 </script>
 
 </body>
     </html>
+
 
 
 
