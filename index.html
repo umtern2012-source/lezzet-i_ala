@@ -6,384 +6,188 @@
 <title>Lezzet-i Ala Köfte & Kokoreç</title>
 
 <style>
-body {
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#000;
-  color:white;
-  padding-bottom: 180px;
-}
-
-/* LOGO */
-.logo-box {
-  text-align:center;
-  padding:20px;
-}
-.logo-box img {
-  width:180px;
-}
-.logo-text {
-  font-size:26px;
-  font-weight:bold;
-  color:orange;
-}
-
-/* KATEGORİ */
-.category {
-  font-size:22px;
-  font-weight:bold;
-  color:orange;
-  margin:25px 10px 10px;
-  border-bottom:2px solid orange;
-  padding-bottom:5px;
-}
-
-/* ÜRÜN KARTI */
-.product {
-  background:#111;
-  padding:12px;
-  margin:8px;
-  border-radius:10px;
-  border:1px solid orange;
-  cursor:pointer;
-  transition:0.2s;
-}
-.product:hover {
-  transform:scale(1.02);
-  background:#222;
-}
-.product-name {
-  font-size:18px;
-  font-weight:bold;
-}
-.product-price {
-  color:gold;
-  font-size:16px;
-}
-
-/* SEPET */
-#cart {
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#111;
-  border-top:2px solid orange;
-  padding:10px;
-}
-#cart-items {
-  max-height:120px;
-  overflow:auto;
-  font-size:14px;
-}
-.cart-btn {
-  background:orange;
-  color:black;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  width:100%;
-  font-size:16px;
-  font-weight:bold;
-  margin-top:5px;
-  cursor:pointer;
-}
-.qty-btn {
-  background:#222;
-  color:white;
-  border:none;
-  padding:2px 6px;
-  margin:0 4px;
-  border-radius:5px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-/* POPUP */
-.popup {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-.popup-box {
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  width:90%;
-  max-width:400px;
-  border:2px solid orange;
-}
-.popup-box input {
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:5px;
-  border:none;
-}
-    /* SEPET ÜRÜN MİKTAR BUTONLARI MOBİL */
-@media (max-width: 480px) {
-  .qty-btn {
-    padding:6px 10px;
-    margin:0 2px;
-    font-size:14px;
-  }
-  #cart-items {
-    font-size:16px;
-  }
-    }
+body{margin:0;font-family:Arial;background:#000;color:white;padding-bottom:180px}
+.logo-box{text-align:center;padding:20px}
+.logo-box img{width:180px}
+.logo-text{font-size:26px;font-weight:bold;color:orange}
+.category{font-size:22px;font-weight:bold;color:orange;margin:25px 10px 10px;border-bottom:2px solid orange;padding-bottom:5px}
+.product{background:#111;padding:12px;margin:8px;border-radius:10px;border:1px solid orange;cursor:pointer;transition:.2s}
+.product:hover{transform:scale(1.02);background:#222}
+.product-name{font-size:18px;font-weight:bold}
+.product-price{color:gold;font-size:16px}
+#cart{position:fixed;bottom:0;left:0;width:100%;background:#111;border-top:2px solid orange;padding:10px}
+#cart-items{max-height:120px;overflow:auto;font-size:14px}
+.cart-btn{background:orange;color:black;padding:10px;border:none;border-radius:8px;width:100%;font-size:16px;font-weight:bold;margin-top:5px;cursor:pointer}
+.qty-btn{background:#222;color:white;border:none;padding:2px 6px;margin:0 4px;border-radius:5px;cursor:pointer;font-weight:bold}
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center}
+.popup-box{background:#111;padding:20px;border-radius:10px;width:90%;max-width:400px;border:2px solid orange}
+.popup-box input{width:100%;padding:10px;margin:5px 0;border-radius:5px;border:none}
+.time-box{height:120px;overflow:auto;border:1px solid orange;padding:5px;width:60px;text-align:center}
+.time-box div{padding:5px;cursor:pointer}
+.time-box div.active{background:orange;color:black;font-weight:bold}
+.payment-btn{background:#333;color:white}
+.payment-btn.active{background:orange;color:black}
 </style>
 </head>
 
 <body>
 
-<!-- LOGO -->
 <div class="logo-box">
-  <img src="logo.png">
-  <div class="logo-text">LEZZET-İ ALA KÖFTE & KOKOREÇ</div>
+<img src="logo.png">
+<div class="logo-text">LEZZET-İ ALA KÖFTE & KOKOREÇ</div>
 </div>
 
 <div id="menu"></div>
 
-<!-- SEPET -->
 <div id="cart">
-  <div id="cart-items"></div>
-  <div id="total">Toplam: 0 TL</div>
-  <button class="cart-btn" onclick="openPopup()">Sipariş Ver</button>
-  <button class="cart-btn" onclick="clearCart()">Sepeti Temizle</button>
+<div id="cart-items"></div>
+<div id="total">Toplam: 0 TL</div>
+<button class="cart-btn" onclick="openPopup()">Sipariş Ver</button>
+<button class="cart-btn" onclick="clearCart()">Sepeti Temizle</button>
 </div>
 
-<!-- POPUP -->
 <div class="popup" id="popup">
-  <div class="popup-box">
-    <h3>Bilgilerinizi Girin</h3>
-    <input id="name" placeholder="İsim">
-    <input id="phone" placeholder="Telefon Numarası">
-    <input id="address" placeholder="Adres">
-    <hr style="margin:10px 0; border:1px solid orange;">
-<div id="leftTime"></div>
-  <div id="rightTime"></div>
-    <h3>Teslim Saati</h3>
+<div class="popup-box">
 
-<div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+<h3>Bilgilerinizi Girin</h3>
+<input id="name" placeholder="İsim">
+<input id="phone" placeholder="Telefon Numarası">
+<input id="address" placeholder="Adres">
 
-  <!-- SOL 0-100 -->
-  <div style="height:120px; overflow:auto; border:1px solid orange; padding:5px;">
-    <div id="leftTime"></div>
-  </div>
+<hr style="border:1px solid orange;margin:10px 0">
 
-  <!-- ORTA : -->
-  <div style="font-size:28px; font-weight:bold;">:</div>
+<h3>Teslim Saati</h3>
 
-  <!-- SAĞ 0-60 -->
-  <div style="height:120px; overflow:auto; border:1px solid orange; padding:5px;">
-    <div id="rightTime"></div>
-  </div>
-
+<div style="display:flex;justify-content:center;align-items:center;gap:10px">
+<div id="leftTime" class="time-box"></div>
+<div style="font-size:28px;font-weight:bold">:</div>
+<div id="rightTime" class="time-box"></div>
 </div>
 
-<h3 style="margin-top:15px;">Ödeme Yöntemi</h3>
-<button type="button" class="cart-btn" onclick="selectPayment('Nakit')">Nakit</button>
-<button type="button" class="cart-btn" onclick="selectPayment('Kapıda Kart')">Kapıda Kart</button>
-<button type="button" class="cart-btn" onclick="selectPayment('Kapıda QR')">Kapıda QR</button>
-    <button class="cart-btn" onclick="sendWhatsApp()">WhatsApp Sipariş Gönder</button>
-  </div>
+<h3 style="margin-top:15px">Ödeme Yöntemi</h3>
+
+<button class="cart-btn payment-btn" onclick="selectPayment(this,'Nakit')">Nakit</button>
+<button class="cart-btn payment-btn" onclick="selectPayment(this,'Kapıda Kart')">Kapıda Kart</button>
+<button class="cart-btn payment-btn" onclick="selectPayment(this,'Kapıda QR')">Kapıda QR</button>
+
+<button class="cart-btn" onclick="sendWhatsApp()">WhatsApp Sipariş Gönder</button>
+
 </div>
-  
-function openPopup(){
-  if(Object.keys(cart).length==0){
-    alert("Sepet boş!");
-    return;
-  }
+</div>
 
-  document.getElementById("popup").style.display="flex";
-
-  // Saatleri sadece popup açılınca yükle
-  if(document.getElementById("leftTime").innerHTML==""){
-
-    // 0-100 SOL
-    for(let i=0;i<=100;i++){
-      document.getElementById("leftTime").innerHTML +=
-      `<div onclick="selectHour(${i})" style="padding:5px; cursor:pointer;">${i}</div>`;
-    }
-
-    // 0-60 SAĞ
-    for(let i=0;i<=60;i++){
-      document.getElementById("rightTime").innerHTML +=
-      `<div onclick="selectMinute(${i})" style="padding:5px; cursor:pointer;">${i}</div>`;
-    }
-
-  }
-}
-
-// Ödeme seç
-function selectPayment(type){
-  selectedPayment = type;
-  alert("Seçilen ödeme: " + type);
-}
-  
 <script>
-// MENÜ
-const menuData = {
-"Ana Yemek":[
-["Kokoreç",350],
-["Köfte",300],
-["Adana",300],
-["Kanat",275],
-["Tavuk Şiş",175],
-["Sucuk",250],
-["Karışık Kebap",800],
-["Hamburger (Patates Kızartması ile)",250]
-],
-"İçecek":[
-["Şişe Kola",60],["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",40],
-["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],
-["Fanta 1L",100],["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],
-["Niğde Gazozu",40],["Su",20]
-],
-"Yan Ürünler":[
-["Jumbo Midye",20],["Normal Midye",15],["Atom Kokoreç",450],
-["Şırdan",350],["Mumbar",400],["Dürüm Kokoreç",360]
-],
-"Kiloluk Ürünler":[
-["Kilo Kanat",800],["Yarım Kilo Kanat",400],["Kilo Köfte",1750],
-["Yarım Kilo Köfte",875],["Kilo Tavuk Şiş",500],["Yarım Kilo Tavuk Şiş",250]
-],
-"Çiğ Ürünler":[
-["Soslu Yaprak Kanat",400],["Yaprak Kanat",375],["El Yapımı köfte Kg",1250],
-["10 Şiş Adana",1350],["Atom Kokoreç 1 Adet",700],
-["Kokoreç 1Kg",900],["Tüm Şiş Kokoreç Kampanya",3600],
-["Tavuk Şiş",250]
-],
-"Tatlı":[
-["Fırın Sütlaç",80]
-]
+
+const menuData={
+"Ana Yemek":[["Kokoreç",350],["Köfte",300],["Adana",300],["Kanat",275],["Tavuk Şiş",175],["Sucuk",250],["Karışık Kebap",800],["Hamburger (Patates Kızartması ile)",250]],
+"İçecek":[["Şişe Kola",60],["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",40],["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],["Fanta 1L",100],["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],["Niğde Gazozu",40],["Su",20]],
+"Tatlı":[["Fırın Sütlaç",80]]
 };
 
 let cart={};
-let selectedHour = "";
-let selectedMinute = "";
-let selectedPayment = "";
-// MENÜ YÜKLE
+let selectedHour="";
+let selectedMinute="";
+let selectedPayment="";
+
 const menuDiv=document.getElementById("menu");
+
 for(let cat in menuData){
-  menuDiv.innerHTML+=`<div class="category">${cat}</div>`;
-  menuData[cat].forEach(item=>{
-    menuDiv.innerHTML+=`
-      <div class="product" onclick="addToCart('${item[0]}',${item[1]})">
-        <div class="product-name">${item[0]}</div>
-        <div class="product-price">${item[1]} TL</div>
-      </div>`;
-  });
+menuDiv.innerHTML+=`<div class="category">${cat}</div>`;
+menuData[cat].forEach(item=>{
+menuDiv.innerHTML+=`
+<div class="product" onclick="addToCart('${item[0]}',${item[1]})">
+<div class="product-name">${item[0]}</div>
+<div class="product-price">${item[1]} TL</div>
+</div>`;
+});
 }
 
-// SEPETE EKLE
 function addToCart(name,price){
-  if(cart[name]){
-    cart[name].qty++;
-  } else {
-    cart[name]={price:price, qty:1};
-  }
-  updateCart();
+if(cart[name]){cart[name].qty++;}
+else{cart[name]={price:price,qty:1};}
+updateCart();
 }
 
-// SEPET GÜNCELLE
 function updateCart(){
-  let html="";
-  let total=0;
-
-  for(let name in cart){
-    let item=cart[name];
-    html+=`
-      ${name} x${item.qty} - ${item.price*item.qty} TL
-      <button class="qty-btn" onclick="decreaseQty('${name}')">-</button>
-      <button class="qty-btn" onclick="increaseQty('${name}')">+</button>
-      <br>
-    `;
-    total+=item.price*item.qty;
-  }
-
-  document.getElementById("cart-items").innerHTML=html;
-  document.getElementById("total").innerText="Toplam: "+total+" TL";
+let html="";let total=0;
+for(let name in cart){
+let item=cart[name];
+html+=`${name} x${item.qty} - ${item.price*item.qty} TL
+<button class="qty-btn" onclick="decreaseQty('${name}')">-</button>
+<button class="qty-btn" onclick="increaseQty('${name}')">+</button><br>`;
+total+=item.price*item.qty;
+}
+document.getElementById("cart-items").innerHTML=html;
+document.getElementById("total").innerText="Toplam: "+total+" TL";
 }
 
-// ÜRÜN EKLE/ÇIKAR BUTONLARI
-function increaseQty(name){
-  cart[name].qty++;
-  updateCart();
-}
+function increaseQty(name){cart[name].qty++;updateCart();}
+function decreaseQty(name){cart[name].qty--;if(cart[name].qty<=0)delete cart[name];updateCart();}
+function clearCart(){cart={};updateCart();}
 
-function decreaseQty(name){
-  cart[name].qty--;
-  if(cart[name].qty<=0) delete cart[name];
-  updateCart();
-}
-
-// SEPET TEMİZLE
-function clearCart(){
-  cart={};
-  updateCart();
-}
-
-// POPUP AÇ
 function openPopup(){
-  if(Object.keys(cart).length==0){alert("Sepet boş!"); return;}
-  document.getElementById("popup").style.display="flex";
+if(Object.keys(cart).length==0){alert("Sepet boş!");return;}
+document.getElementById("popup").style.display="flex";
 }
 
-// WHATSAPP GÖNDER
+function selectPayment(btn,type){
+document.querySelectorAll(".payment-btn").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+selectedPayment=type;
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+
+for(let i=0;i<=100;i++){
+let d=document.createElement("div");
+d.innerText=i;
+d.onclick=function(){
+document.querySelectorAll("#leftTime div").forEach(x=>x.classList.remove("active"));
+d.classList.add("active");
+selectedHour=i;
+};
+document.getElementById("leftTime").appendChild(d);
+}
+
+for(let i=0;i<=60;i++){
+let d=document.createElement("div");
+d.innerText=i;
+d.onclick=function(){
+document.querySelectorAll("#rightTime div").forEach(x=>x.classList.remove("active"));
+d.classList.add("active");
+selectedMinute=i;
+};
+document.getElementById("rightTime").appendChild(d);
+}
+
+});
+
 function sendWhatsApp(){
-  if(selectedHour=="" || selectedMinute==""){
-  alert("Teslim saati seçiniz!");
-  return;
+
+if(selectedHour==""||selectedMinute==""){alert("Teslim saati seçiniz!");return;}
+if(selectedPayment==""){alert("Ödeme yöntemi seçiniz!");return;}
+
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let address=document.getElementById("address").value;
+
+let msg="Yeni Sipariş%0A";
+msg+="İsim: "+name+"%0A";
+msg+="Telefon: "+phone+"%0A";
+msg+="Adres: "+address+"%0A";
+msg+="Teslim Saati: "+selectedHour+":"+selectedMinute+"%0A";
+msg+="Ödeme: "+selectedPayment+"%0A%0A";
+msg+="Sipariş:%0A";
+
+let total=0;
+for(let item in cart){
+msg+=item+" x"+cart[item].qty+" - "+(cart[item].price*cart[item].qty)+" TL%0A";
+total+=cart[item].price*cart[item].qty;
 }
 
-if(selectedPayment==""){
-  alert("Ödeme yöntemi seçiniz!");
-  return;
-} 
-  let name=document.getElementById("name").value;
-  let phone=document.getElementById("phone").value;
-  let address=document.getElementById("address").value;
-
-  let msg="Yeni Sipariş%0A";
-  msg+="İsim: "+name+"%0A";
-  msg+="Telefon: "+phone+"%0A";
-  msg+="Adres: "+address+"%0A%0A";
-  msg+="Sipariş:%0A";
-  msg+="Teslim Saati: "+selectedHour+":"+selectedMinute+"%0A";
-  msg+="Ödeme Yöntemi: "+selectedPayment+"%0A%0A";
-
-  let total=0;
-  for(let item in cart){
-    msg+=item+" x"+cart[item].qty+" - "+(cart[item].price*cart[item].qty)+" TL%0A";
-    total+=cart[item].price*cart[item].qty;
-  }
-
-  msg+="%0AToplam: "+total+" TL";
-  window.open("https://wa.me/905337750685?text="+msg);
-}
-  function selectHour(val){
-  selectedHour = val;
-  alert("Saat seçildi: " + val);
+msg+="%0AToplam: "+total+" TL";
+window.open("https://wa.me/905337750685?text="+msg);
 }
 
-function selectMinute(val){
-  selectedMinute = val;
-  alert("Dakika seçildi: " + val);
-}
 </script>
-
 </body>
-    </html>
-
-
-
-
-
-
+</html>
