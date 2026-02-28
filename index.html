@@ -10,11 +10,37 @@ body{margin:0;font-family:Arial;background:#000;color:white;padding-bottom:180px
 .logo-box{text-align:center;padding:20px}
 .logo-box img{width:180px}
 .logo-text{font-size:26px;font-weight:bold;color:orange}
+
+/* Normal Kategori */
 .category{font-size:22px;font-weight:bold;color:orange;margin:25px 10px 10px;border-bottom:2px solid orange;padding-bottom:5px}
+
+/* Ramazan Özel Kategori */
+.ramazan-category{
+font-size:26px;
+font-weight:bold;
+color:gold;
+margin:30px 10px 15px;
+padding:10px;
+text-align:center;
+background:linear-gradient(90deg,#5c0000,#8b0000,#5c0000);
+border:2px solid gold;
+border-radius:12px;
+letter-spacing:1px;
+}
+
 .product{background:#111;padding:12px;margin:8px;border-radius:10px;border:1px solid orange;cursor:pointer;transition:.2s}
 .product:hover{transform:scale(1.02);background:#222}
+
+/* Ramazan Ürün Kartı */
+.ramazan-product{
+background:#1a0000;
+border:1px solid gold;
+box-shadow:0 0 10px rgba(255,215,0,0.3);
+}
+
 .product-name{font-size:18px;font-weight:bold}
 .product-price{color:gold;font-size:16px}
+
 #cart{position:fixed;bottom:0;left:0;width:100%;background:#111;border-top:2px solid orange;padding:10px}
 #cart-items{max-height:120px;overflow:auto;font-size:14px}
 .cart-btn{background:orange;color:black;padding:10px;border:none;border-radius:8px;width:100%;font-size:16px;font-weight:bold;margin-top:5px;cursor:pointer}
@@ -78,9 +104,27 @@ body{margin:0;font-family:Arial;background:#000;color:white;padding-bottom:180px
 <script>
 
 const menuData={
-"Ana Yemek":[["Kokoreç",350],["Köfte",300],["Adana",300],["Kanat",275],["Tavuk Şiş",175],["Sucuk",250],["Karışık Kebap",800],["Hamburger (Patates Kızartması ile)",250]],
-"İçecek":[["Şişe Kola",60],["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",40],["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],["Fanta 1L",100],["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],["Niğde Gazozu",40],["Su",20]],
-"Tatlı":[["Fırın Sütlaç",80]]
+
+"⭐ Ramazan Menümüz":[
+["2 Kişilik Karışık Izgara Menü",900],
+["Köfte Menü",500],
+["Adana Menü",500],
+["Kanat Menü",450],
+["Tavuk Şiş Menü",350]
+],
+
+"Ana Yemek":[
+["Kokoreç",350],["Köfte",300],["Adana",300],["Kanat",275],["Tavuk Şiş",175],["Sucuk",250],["Karışık Kebap",800],["Hamburger (Patates Kızartması ile)",250]
+],
+
+"İçecek":[
+["Şişe Kola",60],["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",40],["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],["Fanta 1L",100],["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],["Niğde Gazozu",40],["Su",20]
+],
+
+"Tatlı":[
+["Fırın Sütlaç",80]
+]
+
 };
 
 let cart={};
@@ -91,10 +135,16 @@ let selectedPayment="";
 const menuDiv=document.getElementById("menu");
 
 for(let cat in menuData){
+
+if(cat.includes("Ramazan")){
+menuDiv.innerHTML+=`<div class="ramazan-category">${cat}</div>`;
+}else{
 menuDiv.innerHTML+=`<div class="category">${cat}</div>`;
+}
+
 menuData[cat].forEach(item=>{
 menuDiv.innerHTML+=`
-<div class="product" onclick="addToCart('${item[0]}',${item[1]})">
+<div class="product ${cat.includes("Ramazan") ? "ramazan-product" : ""}" onclick="addToCart('${item[0]}',${item[1]})">
 <div class="product-name">${item[0]}</div>
 <div class="product-price">${item[1]} TL</div>
 </div>`;
