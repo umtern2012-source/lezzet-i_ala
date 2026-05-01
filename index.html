@@ -3,27 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lezzet-i Ala Köfte & Kokoreç</title>
+<title>Lezzet-i Ala</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:#fff;
-padding-bottom:180px;
-}
+body{margin:0;font-family:Arial;background:#000;color:#fff;padding-bottom:180px}
 
 .logo-box{text-align:center;padding:20px}
 .logo-text{color:orange;font-size:26px;font-weight:bold}
 
-/* TOP BUTTONS */
-.top-buttons{
-display:flex;
-justify-content:center;
-gap:20px;
-margin:10px;
-}
+/* BUTONLAR */
+.top-buttons{display:flex;justify-content:center;gap:20px;margin:10px}
 
 @keyframes glow{
 0%{box-shadow:0 0 5px #ffcc00}
@@ -32,34 +21,20 @@ margin:10px;
 }
 
 .top-btn{
-width:60px;
-height:60px;
-border-radius:50%;
-background:#111;
-border:2px solid orange;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:28px;
-text-decoration:none;
+width:60px;height:60px;border-radius:50%;
+background:#111;border:2px solid orange;
+display:flex;align-items:center;justify-content:center;
+font-size:28px;text-decoration:none;
 animation:glow 1.8s infinite;
 }
 
 /* MENU */
-.category{
-color:orange;
-font-size:22px;
-margin:20px 10px;
-border-bottom:2px solid orange;
-}
+.category{color:orange;font-size:22px;margin:20px 10px;border-bottom:2px solid orange}
 
 .product{
-background:#111;
-margin:8px;
-padding:10px;
-border:1px solid orange;
-border-radius:10px;
-cursor:pointer;
+background:#111;margin:8px;padding:10px;
+border:1px solid orange;border-radius:10px;
+cursor:pointer
 }
 
 .product-price{color:gold}
@@ -71,7 +46,7 @@ bottom:0;
 width:100%;
 background:#111;
 border-top:2px solid orange;
-padding:10px;
+padding:10px
 }
 
 .cart-btn{
@@ -81,7 +56,7 @@ color:#000;
 padding:10px;
 border:none;
 margin-top:5px;
-font-weight:bold;
+font-weight:bold
 }
 </style>
 </head>
@@ -103,72 +78,76 @@ font-weight:bold;
 <div id="cart">
 <div id="cart-items"></div>
 <div id="total">Toplam: 0 TL</div>
-<button class="cart-btn" onclick="openPopup()">Sipariş Ver</button>
-</div>
-
-<!-- POPUP -->
-<div id="popup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000c;justify-content:center;align-items:center">
-<div style="background:#111;padding:20px;width:90%;max-width:400px;border:2px solid orange">
-
-<h3>Bilgiler</h3>
-<input id="name" placeholder="İsim" style="width:100%;padding:10px;margin:5px 0">
-<input id="phone" placeholder="Telefon" style="width:100%;padding:10px;margin:5px 0">
-<input id="address" placeholder="Adres" style="width:100%;padding:10px;margin:5px 0">
-
-<h3>Ödeme</h3>
-<button onclick="pay(this,'Nakit')" class="cart-btn">Nakit</button>
-<button onclick="pay(this,'Kart')" class="cart-btn">Kapıda Kart</button>
-<button onclick="pay(this,'QR')" class="cart-btn">QR</button>
-
-<button class="cart-btn" onclick="send()">WhatsApp Gönder</button>
-
-</div>
 </div>
 
 <script>
 
-const menuData={ 
-"Ana Yemek":[ 
-["Kokoreç Tüm ekmek",350],["Köfte ekmek",300],["Adana kebap",300],["Kanat",275],
-["Tavuk Şiş",175],["Sucuk ekmek",250],["Karışık Kebap",800] 
-], 
+/* YENİ MENÜ */
+const menuData = {
 
-"İçecek":[ ["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",30],["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],["Fanta 1L",100],["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],["Gazoz",40],["Su",20] 
+"Ana Yemek":[
+["Kokoreç",350],
+["Köfte",300],
+["Adana",300],
+["Kanat",275],
+["Tavuk Şiş",175],
+["Sucuk",250],
+["Karışık Kebap",800]
 ],
-  
-"Tatlı":[ ["Fırın Sütlaç",80] ] }
 
-function add(n,p){
-if(cart[n])cart[n].qty++;
-else cart[n]={price:p,qty:1};
-update();
-}
+"Kiloluk Ürünler":[
+["Kilo ile Kanat",800],
+["Yarım kilo Kanat",400],
+["Kilo ile Köfte",1750],
+["Yarım kilo Köfte",875],
+["Kilo ile Tavuk şiş",600],
+["Yarım kilo Tavuk şiş",300]
+],
 
-function update(){
-let h="",t=0;
-for(let i in cart){
-h+=`${i} x${cart[i].qty}<br>`;
-t+=cart[i].qty*cart[i].price;
-}
-document.getElementById("cart-items").innerHTML=h;
-document.getElementById("total").innerText="Toplam: "+t+" TL";
-}
+"İçecek":[
+["Şişe Kola",60],
+["Kola Kutu",70],
+["Fanta Kutu",70],
+["Ayran Küçük",40],
+["Ayran Büyük",40],
+["Safiş Ayran",40],
+["Şalgam",50],
+["Kola 1L",100],
+["Fanta 1L",100],
+["Ayran 1L",75],
+["Meyveli Soda",30],
+["Sade Soda",25],
+["Niğde Gazozu",40],
+["Su",20]
+],
 
-function openPopup(){
-document.getElementById("popup").style.display="flex";
-}
+"Tatlı":[
+["Fırın Sütlaç",80]
+],
 
-function pay(b,t){
-payment=t;
-}
+"Yan Ürünler":[
+["Midye",20],
+["Atom Kokoreç",450],
+["Şırdan",350],
+["Mumbar",400],
+["Dürüm Kokoreç",360]
+]
 
-function send(){
-let msg="Sipariş:%0A";
-for(let i in cart){
-msg+=i+" x"+cart[i].qty+"%0A";
-}
-msg+="Ödeme: "+payment;
-window.open("https://wa.me/905337750685?text="+msg);
+};
+
+let menu = document.getElementById("menu");
+
+for(let cat in menuData){
+menu.innerHTML += `<div class="category">${cat}</div>`;
+
+menuData[cat].forEach(item=>{
+menu.innerHTML += `
+<div class="product">
+<b>${item[0]}</b>
+<div class="product-price">${item[1]} TL</div>
+</div>
+`;
+});
 }
 
 </script>
