@@ -6,7 +6,7 @@
 <title>Lezzet-i Ala</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#000;color:#fff;padding-bottom:180px}
+body{margin:0;font-family:Arial;background:#000;color:#fff;padding-bottom:220px}
 
 .logo-box{text-align:center;padding:20px}
 .logo-text{color:orange;font-size:26px;font-weight:bold}
@@ -32,7 +32,7 @@ animation:glow 1.8s infinite;
 .category{color:orange;font-size:22px;margin:20px 10px;border-bottom:2px solid orange}
 
 .product{
-background:#111;margin:8px;padding:10px;
+background:#111;margin:8px;padding:12px;
 border:1px solid orange;border-radius:10px;
 cursor:pointer
 }
@@ -49,6 +49,8 @@ border-top:2px solid orange;
 padding:10px
 }
 
+#cart-items{font-size:14px}
+
 .cart-btn{
 width:100%;
 background:orange;
@@ -56,7 +58,32 @@ color:#000;
 padding:10px;
 border:none;
 margin-top:5px;
-font-weight:bold
+font-weight:bold;
+cursor:pointer
+}
+
+.qty-btn{
+background:#222;color:#fff;border:none;
+padding:2px 6px;margin:0 3px;border-radius:5px;
+cursor:pointer
+}
+
+/* POPUP */
+.popup{
+position:fixed;
+top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,.8);
+display:none;justify-content:center;align-items:center
+}
+
+.popup-box{
+background:#111;padding:20px;
+border-radius:10px;width:90%;max-width:400px;
+border:2px solid orange
+}
+
+.popup-box input{
+width:100%;padding:10px;margin:5px 0;border:none
 }
 </style>
 </head>
@@ -78,11 +105,31 @@ font-weight:bold
 <div id="cart">
 <div id="cart-items"></div>
 <div id="total">Toplam: 0 TL</div>
+<button class="cart-btn" onclick="openPopup()">Sipariş Ver</button>
+<button class="cart-btn" onclick="clearCart()">Sepeti Temizle</button>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+<div class="popup-box">
+
+<h3>Bilgiler</h3>
+<input id="name" placeholder="İsim">
+<input id="phone" placeholder="Telefon">
+<input id="address" placeholder="Adres">
+
+<h3>Ödeme</h3>
+<button class="cart-btn" onclick="setPay('Nakit')">Nakit</button>
+<button class="cart-btn" onclick="setPay('Kart')">Kapıda Kart</button>
+<button class="cart-btn" onclick="setPay('QR')">QR</button>
+
+<button class="cart-btn" onclick="sendWhatsApp()">WhatsApp Gönder</button>
+
+</div>
 </div>
 
 <script>
 
-/* YENİ MENÜ */
 const menuData = {
 
 "Ana Yemek":[
@@ -121,9 +168,7 @@ const menuData = {
 ["Su",20]
 ],
 
-"Tatlı":[
-["Fırın Sütlaç",80]
-],
+"Tatlı":[["Fırın Sütlaç",80]],
 
 "Yan Ürünler":[
 ["Midye",20],
@@ -135,19 +180,76 @@ const menuData = {
 
 };
 
-let menu = document.getElementById("menu");
+let cart = {};
+let payment = "";
+
+const menu = document.getElementById("menu");
 
 for(let cat in menuData){
 menu.innerHTML += `<div class="category">${cat}</div>`;
-
 menuData[cat].forEach(item=>{
 menu.innerHTML += `
-<div class="product">
+<div class="product" onclick="addToCart('${item[0]}',${item[1]})">
 <b>${item[0]}</b>
 <div class="product-price">${item[1]} TL</div>
-</div>
-`;
+</div>`;
 });
+}
+
+function addToCart(name,price){
+if(cart[name]) cart[name].qty++;
+else cart[name]={price:price,qty:1};
+updateCart();
+}
+
+function updateCart(){
+let html="", total=0;
+for(let name in cart){
+let item=cart[name];
+html+=`${name} x${item.qty} = ${item.qty*item.price} TL
+<button class="qty-btn" onclick="decrease('${name}')">-</button>
+<button class="qty-btn" onclick="increase('${name}')">+</button><br>`;
+total+=item.qty*item.price;
+}
+document.getElementById("cart-items").innerHTML=html;
+document.getElementById("total").innerText="Toplam: "+total+" TL";
+}
+
+function increase(name){cart[name].qty++;updateCart();}
+function decrease(name){cart[name].qty--;if(cart[name].qty<=0) delete cart[name];updateCart();}
+function clearCart(){cart={};updateCart();}
+
+function openPopup(){
+if(Object.keys(cart).length==0){alert("Sepet boş!");return;}
+document.getElementById("popup").style.display="flex";
+}
+
+function setPay(type){
+payment=type;
+}
+
+function sendWhatsApp(){
+
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let address=document.getElementById("address").value;
+
+let msg="Yeni Sipariş%0A";
+msg+="İsim: "+name+"%0A";
+msg+="Telefon: "+phone+"%0A";
+msg+="Adres: "+address+"%0A";
+msg+="Ödeme: "+payment+"%0A%0A";
+
+let total=0;
+
+for(let item in cart){
+msg+=item+" x"+cart[item].qty+" - "+(cart[item].price*cart[item].qty)+" TL%0A";
+total+=cart[item].price*cart[item].qty;
+}
+
+msg+="%0AToplam: "+total+" TL";
+
+window.open("https://wa.me/905337750685?text="+msg);
 }
 
 </script>
