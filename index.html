@@ -127,24 +127,18 @@ font-weight:bold;
 
 <script>
 
-const menuData={
-"Ana Yemek":[ ["Kokoreç Tüm ekmek",350],["Köfte ekmek",300],["Adana kebap",300],["Kanat",300],["Tavuk Şiş",200],["Sucuk ekmek",250],["Karışık Kebap",900] ], 
-"YAN ÜRÜNLER":[ ["Midye",20],["Şırdan"350],["Mumbar"400],["Atom Kokoreç"450],["Dürüm Kokoreç"360] ],
-"KİLOLUK PİŞMİŞ ÜRÜNLER":[ ["1 KİLO KANAT"800],["YARIM KİLO KANAT"400],["1 KİLO KÖFTE"1750],["YARIM KİLO KÖFTE"875],["1 KİLO TAVUK ŞİŞ"600],["YARIM KİLO TAVUK ŞİŞ"300] ]
-"Tatlı":[ ["Fırın Sütlaç",80] ]
+const menuData={ 
+"Ana Yemek":[ 
+["Kokoreç Tüm ekmek",350],["Köfte ekmek",300],["Adana kebap",300],["Kanat",275],["Tavuk Şiş",175],["Sucuk ekmek",250],["Karışık Kebap",800] 
+], 
+"İçecek":[ 
+["Kola Kutu",70],["Fanta Kutu",70],["Ayran Küçük",30],["Ayran Büyük",40],["Safiş Ayran",40],["Şalgam",50],["Kola 1L",100],["Fanta 1L",100],
+["Ayran 1L",75],["Sade Soda",25],["Meyveli Soda",30],["Gazoz",40],["Su",20] 
+], 
+"Tatlı":[ 
+["Fırın Sütlaç",80] 
+] 
 };
-
-let cart={},payment="";
-
-let menu=document.getElementById("menu");
-
-for(let c in menuData){
-menu.innerHTML+=`<div class="category">${c}</div>`;
-menuData[c].forEach(i=>{
-menu.innerHTML+=`<div class="product" onclick="add('${i[0]}',${i[1]})">
-<b>${i[0]}</b><div class="product-price">${i[1]} TL</div></div>`;
-});
-}
 
 function add(n,p){
 if(cart[n])cart[n].qty++;
